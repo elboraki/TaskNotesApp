@@ -1,0 +1,40 @@
+# Maven build directory
+/target
+
+# Eclipse settings
+.project
+.classpath
+.settings/
+
+# IDEs
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Backup files
+*~
+*.swp
+*.bak
+
+# JetBrains IDEs
+/.idea/
+*.iws
+*.ipr
+
+# Tomcat work/temp dirs (if committed)
+tomcat/work/
+tomcat/temp/
+
+# Node/npm if used for frontend (optional)
+/node_modules/
+/dist/
+/package-lock.json
+
+# Environment/Secrets (if any)
+.env
