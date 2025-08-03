@@ -1,5 +1,6 @@
 # Maven build directory
 /target
+/target/m2e-wtp/
 
 # Eclipse settings
 .project
@@ -38,3 +39,6 @@ tomcat/temp/
 
 # Environment/Secrets (if any)
 .env
+target/m2e-wtp/web-resources/META-INF/maven/TaskNote/TaskNote/pom.xml
+target/m2e-wtp/web-resources/META-INF/MANIFEST.MF
+target/m2e-wtp/web-resources/META-INF/maven/TaskNote/TaskNote/pom.properties

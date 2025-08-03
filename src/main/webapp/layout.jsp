@@ -9,8 +9,8 @@
 
 </head>
 <body>
-<div class="container">
 <%@ include file="partials/header.jsp" %>
+<div class="container">
   
   <jsp:include page="${contentPage}" />
 </div>
