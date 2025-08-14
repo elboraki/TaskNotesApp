@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,17 +14,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.labgeek.models.Task;
 import com.labgeek.utils.DatabaseConnection;
+
+import persistance.TaskDAO;
 
 public class TaskServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	private TaskDAO taskDAO;
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public TaskServlet() {
-		super();
-		// TODO Auto-generated constructor stub
+		
+		taskDAO=new TaskDAO();
 	}
 
 	/**
@@ -32,21 +37,17 @@ public class TaskServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String sql = "SELECT id, title, description, status, user_id FROM tasks ORDER BY id DESC";
+		
 		try {
-			Connection conn = DatabaseConnection.getInstance().getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ResultSet rs = ps.executeQuery();
-
-			while (rs.next()) {
-				System.out.println("Description " + rs.getString("description"));
-
-			}
-		} catch (Exception e) {
-
+			List<Task> tasks=taskDAO.findAll();
+			request.setAttribute("tasks", tasks);
+			request.setAttribute("contentPage", "tasks.jsp");
+			request.getRequestDispatcher("layout.jsp").forward(request, response);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		request.setAttribute("contentPage", "tasks.jsp");
-		request.getRequestDispatcher("layout.jsp").forward(request, response);
+		
 	}
 
 	/**
