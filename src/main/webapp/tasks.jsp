@@ -18,7 +18,18 @@ String ctx = request.getContextPath();
 		style="background: #e8f5e9; border: 1px solid #c8e6c9; padding: 10px; border-radius: 6px;">
 		${message}</p>
 </c:if>
+<div class="container mt-4">
 
+	<form class="row g-3 mb-3" method="get" action="employee">
+		<div class="col-mx-auto">
+			<input type="text" name="search" class="form-control"
+				placeholder="Search tasks" value="">
+		</div>
+		<div class="col-auto">
+			<button type="submit" class="btn btn-primary mb-3">Search</button>
+		</div>
+	</form>
+</div>
 <c:choose>
 	<c:when test="${empty tasks}">
 		<p>No tasks found.</p>
