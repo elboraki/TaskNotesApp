@@ -22,12 +22,13 @@ import persistance.TaskDAO;
 public class TaskServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TaskDAO taskDAO;
+
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public TaskServlet() {
-		
-		taskDAO=new TaskDAO();
+
+		taskDAO = new TaskDAO();
 	}
 
 	/**
@@ -37,17 +38,25 @@ public class TaskServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+		int page = 1;
+		int recordsPerPage = 10;
+
+		if (request.getParameter("page") != null)
+			page = Integer.parseInt(request.getParameter("page"));
 		try {
-			List<Task> tasks=taskDAO.findAll();
+			List<Task> tasks = taskDAO.findAll((page - 1) * recordsPerPage, recordsPerPage);
 			request.setAttribute("tasks", tasks);
+			int noOfRecords = taskDAO.count();
+			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+			request.setAttribute("noOfPages", noOfPages);
+			request.setAttribute("currentPage", page);
 			request.setAttribute("contentPage", "tasks.jsp");
 			request.getRequestDispatcher("layout.jsp").forward(request, response);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/**

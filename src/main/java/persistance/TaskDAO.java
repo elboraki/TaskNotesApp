@@ -19,7 +19,6 @@ public class TaskDAO implements ITaskDAO {
 	private Task map(ResultSet rs) throws SQLException {
 		Task task = new Task();
 		task.setId(rs.getInt("id"));
-		task.setId(rs.getInt("id"));
 		task.setTitle(rs.getString("title"));
 		task.setDescription(rs.getString("description"));
 		task.setStatus(rs.getString("status"));
@@ -29,18 +28,22 @@ public class TaskDAO implements ITaskDAO {
 	}
 
 	@Override
-	public List<Task> findAll() throws SQLException {
-		final String sql = "SELECT id,title,description,status,user_id from tasks ORDER BY id DESC";
-		List<Task> taskList=new ArrayList<Task>();
+	public List<Task> findAll(int offset, int limit) throws SQLException {
+		final String sql = "SELECT id,title,description,status,user_id from tasks ORDER BY id DESC limit ? offset ?";
+		List<Task> taskList = new ArrayList<Task>();
 		try {
-			PreparedStatement ps=getConn().prepareStatement(sql);
-			ResultSet rs=ps.executeQuery();
-			while(rs.next()) {
+			PreparedStatement ps = getConn().prepareStatement(sql);
+			ps.setInt(1, limit);
+			ps.setInt(2, offset);
+
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
 				taskList.add(map(rs));
 			}
 			return taskList;
-		}catch(SQLException e) {
-			
+		} catch (SQLException e) {
+
 		}
 		return null;
 	}
@@ -76,9 +79,16 @@ public class TaskDAO implements ITaskDAO {
 	}
 
 	@Override
-	public long count() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int count() throws SQLException {
+		final String sql = "SELECT count(*) from tasks";
+		try {
+			PreparedStatement ps = getConn().prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			return rs.getInt(1);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

@@ -7,7 +7,7 @@ import com.labgeek.models.Task;
 
 public interface ITaskDAO {
 
-	List<Task> findAll() throws SQLException;
+	List<Task> findAll(int offset,int limit) throws SQLException;
 
 	List<Task> findByUser() throws SQLException;
 
@@ -25,6 +25,6 @@ public interface ITaskDAO {
 
 	boolean delete(int id) throws SQLException;
 
-	long count() throws SQLException;
+	int count() throws SQLException;
 
 }
