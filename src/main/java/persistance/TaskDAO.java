@@ -28,22 +28,41 @@ public class TaskDAO implements ITaskDAO {
 	}
 
 	@Override
-	public List<Task> findAll(int offset, int limit) throws SQLException {
-		final String sql = "SELECT id,title,description,status,user_id from tasks ORDER BY id DESC limit ? offset ?";
+	public List<Task> findAll(int offset, int limit, String search) throws SQLException {
+		String sql = "SELECT id,title,description,status,user_id from tasks";
+		String whereSql = "WHERE title like ? OR description like ?";
+		String orderSql = "ORDER BY id DESC limit ? offset ?";
+		int idx = 1;
 		List<Task> taskList = new ArrayList<Task>();
+		if (search != null && !search.isEmpty()) {
+			sql = sql + " " + whereSql + " " + orderSql;
+			System.out.println("Column full " + sql);
+
+		} else {
+			sql = sql + " " + orderSql;
+
+		}
 		try {
 			PreparedStatement ps = getConn().prepareStatement(sql);
-			ps.setInt(1, limit);
-			ps.setInt(2, offset);
+			if (search != null && !search.isEmpty()) {
+				ps.setString(1, "%" + search + "%");
+				ps.setString(2, "%" + search + "%");
+				ps.setInt(3, limit);
+				ps.setInt(4, offset);
+			} else {
+				ps.setInt(1, limit);
+				ps.setInt(2, offset);
+			}
 
 			ResultSet rs = ps.executeQuery();
-
+			System.out.println("Column ABC");
 			while (rs.next()) {
 				taskList.add(map(rs));
+
 			}
 			return taskList;
 		} catch (SQLException e) {
-
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -79,12 +98,20 @@ public class TaskDAO implements ITaskDAO {
 	}
 
 	@Override
-	public int count() throws SQLException {
-		final String sql = "SELECT count(*) from tasks";
+	public int count(String search) throws SQLException {
+		String sql = "SELECT count(*) from tasks";
+		if (search != null && !search.isEmpty()) {
+			sql += " WHERE title LIKE ? OR description LIKE ?";
+		}
 		try {
 			PreparedStatement ps = getConn().prepareStatement(sql);
+			if (search != null && !search.isEmpty()) {
+				ps.setString(1, "%" + search + "%");
+				ps.setString(2, "%" + search + "%");
+			}
 			ResultSet rs = ps.executeQuery();
 			rs.next();
+
 			return rs.getInt(1);
 		} catch (Exception e) {
 			throw new RuntimeException(e);

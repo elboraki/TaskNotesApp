@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <%
 String ctx = request.getContextPath();
@@ -20,10 +20,10 @@ String ctx = request.getContextPath();
 </c:if>
 <div class="container mt-4">
 
-	<form class="row g-3 mb-3" method="get" action="employee">
+	<form class="row g-3 mb-3" method="get" action="<%= ctx %>/tasks">
 		<div class="col-mx-auto">
 			<input type="text" name="search" class="form-control"
-				placeholder="Search tasks" value="">
+				placeholder="Search tasks" value="${fn:escapeXml(search)}">
 		</div>
 		<div class="col-auto">
 			<button type="submit" class="btn btn-primary mb-3">Search</button>
@@ -38,7 +38,7 @@ String ctx = request.getContextPath();
 		<table class="table table-striped"">
 			<thead>
 				<tr>
-					<th">ID</th>
+					<th>ID</th>
 					<th>Title</th>
 					<th>Description</th>
 					<th>Status</th>

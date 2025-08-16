@@ -40,17 +40,19 @@ public class TaskServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		int page = 1;
 		int recordsPerPage = 10;
-
+	    String search = request.getParameter("search"); // new
 		if (request.getParameter("page") != null)
 			page = Integer.parseInt(request.getParameter("page"));
 		try {
-			List<Task> tasks = taskDAO.findAll((page - 1) * recordsPerPage, recordsPerPage);
+			List<Task> tasks = taskDAO.findAll((page - 1) * recordsPerPage, recordsPerPage,search);
 			request.setAttribute("tasks", tasks);
-			int noOfRecords = taskDAO.count();
+			int noOfRecords = taskDAO.count(search);
 			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 			request.setAttribute("noOfPages", noOfPages);
 			request.setAttribute("currentPage", page);
 			request.setAttribute("contentPage", "tasks.jsp");
+		    request.setAttribute("search", search == null ? "" : search);
+
 			request.getRequestDispatcher("layout.jsp").forward(request, response);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
