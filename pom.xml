@@ -4,6 +4,11 @@
   <artifactId>TaskNote</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
+  <properties>
+  <maven.compiler.release>8</maven.compiler.release>
+  <junit.jupiter.version>5.9.3</junit.jupiter.version>      <!-- Java 8 OK -->
+  <mockito.version>4.11.0</mockito.version>                 <!-- Java 8 OK -->
+</properties>
    <dependencies>
     <!-- JDBC Driver for MySQL -->
     <dependency>
@@ -19,13 +24,46 @@
       <version>3.1.0</version>
       <scope>provided</scope>
     </dependency>
+    
+        <!-- JSTL (required in WAR, NOT provided) -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>1.2</version>
+    </dependency>
+      <dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>${junit.jupiter.version}</version>
+    <scope>test</scope>
+  </dependency>
+
+  <!-- Mockito Core (Java 8 compatible) -->
+  <dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-core</artifactId>
+    <version>${mockito.version}</version>
+    <scope>test</scope>
+  </dependency>
+
+  <!-- Mockito + JUnit Jupiter integration -->
+  <dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-junit-jupiter</artifactId>
+    <version>${mockito.version}</version>
+    <scope>test</scope>
+  </dependency>
   </dependencies>
+  
+  
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.2.3</version>
       </plugin>
+      
+      
     </plugins>
   </build>
 </project>

@@ -12,7 +12,7 @@ import com.labgeek.models.Task;
 import com.labgeek.utils.DatabaseConnection;
 
 public class TaskDAO implements ITaskDAO {
-	private Connection getConn() throws SQLException {
+	public Connection getConn() throws SQLException {
 		return DatabaseConnection.getInstance().getConnection();
 	}
 
