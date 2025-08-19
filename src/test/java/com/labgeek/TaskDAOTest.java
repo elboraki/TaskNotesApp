@@ -150,4 +150,11 @@ class TaskDAOTest {
         verify(ps).setString(1, "%Bug%");
         verify(ps).setString(2, "%Bug%");
     }
+    @Test
+    void test_should_be_return_excpetion() throws Exception {
+    	
+        doThrow(new RuntimeException()).when(dao).getConn(); // trigger the error
+
+        assertThrows(RuntimeException.class, () -> dao.count(""));
+    }
 }
