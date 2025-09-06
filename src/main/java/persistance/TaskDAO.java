@@ -81,8 +81,21 @@ public class TaskDAO implements ITaskDAO {
 
 	@Override
 	public int insert(Task task) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+
+		String query = "INSERT INTO tasks(title,description,status,user_id) VALUES(?,?,?,?)";
+		try {
+			PreparedStatement ps = getConn().prepareStatement(query);
+			ps.setString(1, task.getTitle());
+			ps.setString(2, task.getDescription());
+			ps.setString(3, task.getStatus());
+			ps.setInt(4, 1);
+			int row=ps.executeUpdate();
+			return row;
+		} catch (Exception e) {
+			throw new SQLException(e);
+
+		}
+
 	}
 
 	@Override
@@ -113,8 +126,8 @@ public class TaskDAO implements ITaskDAO {
 			rs.next();
 
 			return rs.getInt(1);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		} catch (SQLException e) {
+			throw new SQLException(e);
 		}
 	}
 

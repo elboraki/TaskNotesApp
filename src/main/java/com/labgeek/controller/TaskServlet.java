@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.labgeek.models.Task;
 import com.labgeek.utils.DatabaseConnection;
@@ -37,28 +38,33 @@ public class TaskServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		int page = 1;
-		int recordsPerPage = 10;
-	    String search = request.getParameter("search"); // new
-		if (request.getParameter("page") != null)
-			page = Integer.parseInt(request.getParameter("page"));
-		try {
-			List<Task> tasks = taskDAO.findAll((page - 1) * recordsPerPage, recordsPerPage,search);
-			request.setAttribute("tasks", tasks);
-			int noOfRecords = taskDAO.count(search);
-			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
-			request.setAttribute("noOfPages", noOfPages);
-			request.setAttribute("currentPage", page);
-			request.setAttribute("contentPage", "tasks.jsp");
-		    request.setAttribute("search", search == null ? "" : search);
-
+		if (request.getParameter("action")!=null && (request.getParameter("action").toString().equals("new"))) {
+			request.setAttribute("contentPage", "addTask.jsp");
 			request.getRequestDispatcher("layout.jsp").forward(request, response);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
+		} else {
+			// TODO Auto-generated method stub
+			int page = 1;
+			int recordsPerPage = 10;
+			String search = request.getParameter("search"); // new
+			if (request.getParameter("page") != null)
+				page = Integer.parseInt(request.getParameter("page"));
+			try {
+				List<Task> tasks = taskDAO.findAll((page - 1) * recordsPerPage, recordsPerPage, search);
+				request.setAttribute("tasks", tasks);
+				int noOfRecords = taskDAO.count(search);
+				int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+				request.setAttribute("noOfPages", noOfPages);
+				request.setAttribute("currentPage", page);
+				request.setAttribute("contentPage", "tasks.jsp");
+				request.setAttribute("search", search == null ? "" : search);
+
+				request.getRequestDispatcher("layout.jsp").forward(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -67,8 +73,30 @@ public class TaskServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		HttpSession session=request.getSession();
+		String title=request.getParameter("title").toString();
+		String description=request.getParameter("description").toString();
+		String status=request.getParameter("status").toString();
+		
+		Task task=new Task();
+		task.setTitle(title);
+		task.setDescription(description);
+		task.setStatus(status);
+		try {
+			int result=taskDAO.insert(task);
+			if(result==1) {
+				session.setAttribute("flashOk","Success your task has been inserted");
+				
+			}else {
+				session.setAttribute("flashErr","Erro your task has not been inserted");
+
+			}
+			response.sendRedirect(request.getContextPath()+"/tasks");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

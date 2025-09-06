@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <%
 String ctx = request.getContextPath();
@@ -12,15 +12,22 @@ String ctx = request.getContextPath();
 		Task</a>
 </div>
 
-<!-- Optional flash message -->
-<c:if test="${not empty message}">
-	<p
-		style="background: #e8f5e9; border: 1px solid #c8e6c9; padding: 10px; border-radius: 6px;">
-		${message}</p>
-</c:if>
+<div class="mt-2">
+	<!-- Optional flash message -->
+	<c:if test="${not empty sessionScope.flashOk}">
+		<div class="alert alert-success">${sessionScope.flashOk}</div>
+		<c:remove var="flashOk" scope="session" />
+	</c:if>
+
+	<c:if test="${not empty sessionScope.flashErr}">
+		<div class="alert alert-danger">${sessionScope.flashErr}</div>
+		<c:remove var="flashErr" scope="session" />
+	</c:if>
+</div>
+
 <div class="container mt-4">
 
-	<form class="row g-3 mb-3" method="get" action="<%= ctx %>/tasks">
+	<form class="row g-3 mb-3" method="get" action="<%=ctx%>/tasks">
 		<div class="col-mx-auto">
 			<input type="text" name="search" class="form-control"
 				placeholder="Search tasks" value="${fn:escapeXml(search)}">
