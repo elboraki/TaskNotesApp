@@ -10,6 +10,7 @@ import java.util.List;
 import com.labgeek.DAO.ITaskDAO;
 import com.labgeek.models.Task;
 import com.labgeek.utils.DatabaseConnection;
+import com.mysql.cj.protocol.Resultset;
 
 public class TaskDAO implements ITaskDAO {
 	public Connection getConn() throws SQLException {
@@ -23,6 +24,7 @@ public class TaskDAO implements ITaskDAO {
 		task.setDescription(rs.getString("description"));
 		task.setStatus(rs.getString("status"));
 		task.setUserId(rs.getInt("user_id"));
+
 		return task;
 
 	}
@@ -80,6 +82,23 @@ public class TaskDAO implements ITaskDAO {
 	}
 
 	@Override
+	public Task getTaskById(int id) throws SQLException {
+		Task currentTask = new Task();
+		String sql = "SELECT id,title,description,status,user_id from tasks where id=?";
+		PreparedStatement ps = getConn().prepareStatement(sql);
+		ps.setInt(1, id);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			currentTask = map(rs);
+
+		}
+
+		System.out.println("Column Task selected " + currentTask.getTitle());
+
+		return currentTask;
+	}
+
+	@Override
 	public int insert(Task task) throws SQLException {
 
 		String query = "INSERT INTO tasks(title,description,status,user_id) VALUES(?,?,?,?)";
@@ -89,7 +108,7 @@ public class TaskDAO implements ITaskDAO {
 			ps.setString(2, task.getDescription());
 			ps.setString(3, task.getStatus());
 			ps.setInt(4, 1);
-			int row=ps.executeUpdate();
+			int row = ps.executeUpdate();
 			return row;
 		} catch (Exception e) {
 			throw new SQLException(e);
@@ -99,9 +118,20 @@ public class TaskDAO implements ITaskDAO {
 	}
 
 	@Override
-	public boolean update(Task task) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public int update(Task task) throws SQLException {
+		String query = "UPDATE tasks SET title=?,description=?,status=? WHERE id=?";
+		try {
+			PreparedStatement ps = getConn().prepareStatement(query);
+			ps.setString(1, task.getTitle());
+			ps.setString(2, task.getDescription());
+			ps.setString(3, task.getStatus());
+			ps.setInt(4, task.getId());
+			int row = ps.executeUpdate();
+			return row;
+		} catch (Exception e) {
+			throw new SQLException(e);
+
+		}
 	}
 
 	@Override

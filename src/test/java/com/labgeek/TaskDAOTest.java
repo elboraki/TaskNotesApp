@@ -186,5 +186,33 @@ class TaskDAOTest {
 	    verifyNoMoreInteractions(ps);
 
 	}
+	@Test
+	void update_task_and_return_success()throws Exception{
+		when(ps.executeUpdate()).thenReturn(1);
+		
+		Task mockedTask = new Task();
+		mockedTask.setTitle("ABC");
+		mockedTask.setDescription("lorem ipsum bethooven");
+		mockedTask.setStatus("Pending");
+		mockedTask.setId(11);
+		
+		long row=dao.update(mockedTask);
+		
+		assertEquals(row,1);
+		
+		ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
+		verify(connection).prepareStatement(sqlCap.capture());
+		assertTrue(sqlCap.getValue().toUpperCase().contains("UPDATE"));
+		InOrder inOrder=inOrder(ps);
+		inOrder.verify(ps).setString(1, "ABC");
+		inOrder.verify(ps).setString(2, "lorem ipsum bethooven");
+		inOrder.verify(ps).setString(3, "Pending");
+		inOrder.verify(ps).setInt(4, 11);
+
+
+		verify(ps).executeUpdate();
+	    verifyNoMoreInteractions(ps);
+		
+	}
 
 }

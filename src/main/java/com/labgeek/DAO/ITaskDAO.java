@@ -12,14 +12,16 @@ public interface ITaskDAO {
 	List<Task> findByUser() throws SQLException;
 
 	List<Task> findByStatus() throws SQLException;
-
+	
+	Task getTaskById(int id) throws SQLException;
+	
 	/** @return Generated ID of Task */
 
 	int insert(Task task) throws SQLException;
 
 	/** @return boolean if row was updated Task */
 
-	boolean update(Task task) throws SQLException;
+	int update(Task task) throws SQLException;
 
 	/** @return boolean if row was removedd Task */
 

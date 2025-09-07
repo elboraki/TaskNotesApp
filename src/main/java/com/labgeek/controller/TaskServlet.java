@@ -38,9 +38,23 @@ public class TaskServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		if (request.getParameter("action")!=null && (request.getParameter("action").toString().equals("new"))) {
+		if (request.getParameter("action") != null && (request.getParameter("action").toString().equals("new"))) {
 			request.setAttribute("contentPage", "tasks/addTask.jsp");
 			request.getRequestDispatcher("layout.jsp").forward(request, response);
+
+		} else if (request.getParameter("action") != null
+				&& (request.getParameter("action").toString().equals("edit"))) {
+			int id = Integer.parseInt(request.getParameter("id").toString());
+			Task currentTask;
+			try {
+				currentTask = taskDAO.getTaskById(id);
+				request.setAttribute("task", currentTask);
+				request.setAttribute("contentPage", "tasks/editTask.jsp");
+				request.getRequestDispatcher("layout.jsp").forward(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		} else {
 			// TODO Auto-generated method stub
@@ -73,30 +87,68 @@ public class TaskServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session=request.getSession();
-		String title=request.getParameter("title").toString();
-		String description=request.getParameter("description").toString();
-		String status=request.getParameter("status").toString();
-		
-		Task task=new Task();
+		HttpSession session = request.getSession();
+		if ("PUT".equalsIgnoreCase(request.getParameter("_method"))) {
+			doPut(request, response);
+		} else {
+			String title = request.getParameter("title").toString();
+			String description = request.getParameter("description").toString();
+			String status = request.getParameter("status").toString();
+
+			Task task = new Task();
+			task.setTitle(title);
+			task.setDescription(description);
+			task.setStatus(status);
+			try {
+				int result = taskDAO.insert(task);
+				if (result == 1) {
+					session.setAttribute("flashOk", "Success your task has been inserted");
+
+				} else {
+					session.setAttribute("flashErr", "Erro your task has not been inserted");
+
+				}
+				response.sendRedirect(request.getContextPath() + "/tasks");
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	@Override
+	protected void doPut(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		System.out.println("Method to submit form PUT");
+
+		HttpSession session = request.getSession();
+		String title = request.getParameter("title").toString();
+		String description = request.getParameter("description").toString();
+		String status = request.getParameter("status").toString();
+		int id = Integer.parseInt(request.getParameter("id"));
+
+		Task task = new Task();
+		task.setId(id);
 		task.setTitle(title);
 		task.setDescription(description);
 		task.setStatus(status);
+
 		try {
-			int result=taskDAO.insert(task);
-			if(result==1) {
-				session.setAttribute("flashOk","Success your task has been inserted");
-				
-			}else {
-				session.setAttribute("flashErr","Erro your task has not been inserted");
+			int result = taskDAO.update(task);
+			if (result == 1) {
+				session.setAttribute("flashOk", "Success your task has been updated");
+
+			} else {
+				session.setAttribute("flashErr", "Erro your task has not been updated");
 
 			}
-			response.sendRedirect(request.getContextPath()+"/tasks");
+			response.sendRedirect(request.getContextPath() + "/tasks");
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 }
