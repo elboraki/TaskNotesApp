@@ -28,7 +28,7 @@ public class NoteServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		request.setAttribute("contentPage", "notes.jsp");
+		request.setAttribute("contentPage", "notes/notes.jsp");
 		request.getRequestDispatcher("layout.jsp").forward(request, response);
 	}
 

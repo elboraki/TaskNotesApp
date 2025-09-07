@@ -39,7 +39,7 @@ public class TaskServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		if (request.getParameter("action")!=null && (request.getParameter("action").toString().equals("new"))) {
-			request.setAttribute("contentPage", "addTask.jsp");
+			request.setAttribute("contentPage", "tasks/addTask.jsp");
 			request.getRequestDispatcher("layout.jsp").forward(request, response);
 
 		} else {
@@ -56,7 +56,7 @@ public class TaskServlet extends HttpServlet {
 				int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 				request.setAttribute("noOfPages", noOfPages);
 				request.setAttribute("currentPage", page);
-				request.setAttribute("contentPage", "tasks.jsp");
+				request.setAttribute("contentPage", "tasks/tasks.jsp");
 				request.setAttribute("search", search == null ? "" : search);
 
 				request.getRequestDispatcher("layout.jsp").forward(request, response);
