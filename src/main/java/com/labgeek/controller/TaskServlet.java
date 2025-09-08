@@ -56,6 +56,27 @@ public class TaskServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 
+		} else if (request.getParameter("action") != null
+				&& (request.getParameter("action").toString().equals("delete"))) {
+			HttpSession session=request.getSession();
+			int id = Integer.parseInt(request.getParameter("id").toString());
+			
+			try {
+				int row = taskDAO.delete(id);
+				if (row == 1) {
+					session.setAttribute("flashOk", "Success your task has been deleted");
+
+				} else {
+					session.setAttribute("flashErr", "Error your task has not been deleted");
+
+				}
+				response.sendRedirect(request.getContextPath() + "/tasks");
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		} else {
 			// TODO Auto-generated method stub
 			int page = 1;

@@ -25,7 +25,7 @@ public interface ITaskDAO {
 
 	/** @return boolean if row was removedd Task */
 
-	boolean delete(int id) throws SQLException;
+	int delete(int id) throws SQLException;
 
 	int count(String Search) throws SQLException;
 

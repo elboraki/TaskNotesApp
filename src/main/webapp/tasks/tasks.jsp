@@ -61,8 +61,12 @@ String ctx = request.getContextPath();
 						<td><c:out value="${t.description}" /></td>
 						<td>${t.status}</td>
 						<td>${t.userId}</td>
-						<td class="actions"><a class="btn btn-warning"
-							href="<%= ctx %>/tasks?action=edit&id=${t.id}">Edit</a> <a
+						<td class="actions">
+			
+						<a class="btn btn-warning"
+							href="<%= ctx %>/tasks?action=edit&id=${t.id}">Edit</a> 
+							<input type="hidden" _method="delete" />
+							<a
 							class="btn btn-danger"
 							href="<%= ctx %>/tasks?action=delete&id=${t.id}"
 							onclick="return confirm('Delete task #${t.id}?')">Delete</a></td>

@@ -135,9 +135,17 @@ public class TaskDAO implements ITaskDAO {
 	}
 
 	@Override
-	public boolean delete(int id) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public int delete(int id) throws SQLException {
+		String query = "DELETE FROM tasks WHERE id=?";
+		try {
+			PreparedStatement ps = getConn().prepareStatement(query);
+			ps.setInt(1, id);
+			int row = ps.executeUpdate();
+			return row;
+		} catch (Exception e) {
+			throw new SQLException(e);
+
+		}
 	}
 
 	@Override
