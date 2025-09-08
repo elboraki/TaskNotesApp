@@ -58,9 +58,9 @@ public class TaskServlet extends HttpServlet {
 
 		} else if (request.getParameter("action") != null
 				&& (request.getParameter("action").toString().equals("delete"))) {
-			HttpSession session=request.getSession();
+			HttpSession session = request.getSession();
 			int id = Integer.parseInt(request.getParameter("id").toString());
-			
+
 			try {
 				int row = taskDAO.delete(id);
 				if (row == 1) {

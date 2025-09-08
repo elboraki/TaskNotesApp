@@ -214,5 +214,32 @@ class TaskDAOTest {
 	    verifyNoMoreInteractions(ps);
 		
 	}
+	
+	@Test
+	void delete_task_and_return_success()throws Exception{
+		when(ps.executeUpdate()).thenReturn(1);
+		
+		Task mockedTask = new Task();
+		mockedTask.setTitle("ABC");
+		mockedTask.setDescription("lorem ipsum bethooven");
+		mockedTask.setStatus("Pending");
+		mockedTask.setId(1);
+		
+		long row=dao.delete(mockedTask.getId());
+		
+		assertEquals(row,1);
+		
+		ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
+		verify(connection).prepareStatement(sqlCap.capture());
+		assertTrue(sqlCap.getValue().toUpperCase().contains("DELETE"));
+		InOrder inOrder=inOrder(ps);
+		inOrder.verify(ps).setInt(1, 1);
+		
+
+
+		verify(ps).executeUpdate();
+	    verifyNoMoreInteractions(ps);
+		
+	}
 
 }
