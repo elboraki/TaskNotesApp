@@ -10,7 +10,6 @@ import java.util.List;
 import com.labgeek.DAO.ITaskDAO;
 import com.labgeek.models.Task;
 import com.labgeek.utils.DatabaseConnection;
-import com.mysql.cj.protocol.Resultset;
 
 public class TaskDAO implements ITaskDAO {
 	public Connection getConn() throws SQLException {
@@ -35,7 +34,7 @@ public class TaskDAO implements ITaskDAO {
 		String whereSql = "WHERE title like ? OR description like ?";
 		String orderSql = "ORDER BY id DESC limit ? offset ?";
 		int idx = 1;
-		List<Task> taskList = new ArrayList<Task>();
+		List<Task> taskList = new ArrayList<>();
 		if (search != null && !search.isEmpty()) {
 			sql = sql + " " + whereSql + " " + orderSql;
 			System.out.println("Column full " + sql);

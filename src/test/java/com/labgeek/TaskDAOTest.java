@@ -1,8 +1,23 @@
 package com.labgeek;
 
-import com.labgeek.models.Task;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
-import persistance.TaskDAO;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,15 +28,9 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import com.labgeek.models.Task;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import persistance.TaskDAO;
 
 /**
  * Tests for TaskDAO using Mockito (no DB). NOTE: We stub getConn() on a Spy to
@@ -46,7 +55,7 @@ class TaskDAOTest {
 		// When DAO asks for a connection, give it our mock
 		doReturn(connection).when(dao).getConn();
 		when(connection.prepareStatement(anyString())).thenReturn(ps);
-		
+
 	}
 
 	@Test
@@ -189,17 +198,17 @@ class TaskDAOTest {
 	@Test
 	void update_task_and_return_success()throws Exception{
 		when(ps.executeUpdate()).thenReturn(1);
-		
+
 		Task mockedTask = new Task();
 		mockedTask.setTitle("ABC");
 		mockedTask.setDescription("lorem ipsum bethooven");
 		mockedTask.setStatus("Pending");
 		mockedTask.setId(11);
-		
+
 		long row=dao.update(mockedTask);
-		
+
 		assertEquals(row,1);
-		
+
 		ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
 		verify(connection).prepareStatement(sqlCap.capture());
 		assertTrue(sqlCap.getValue().toUpperCase().contains("UPDATE"));
@@ -212,34 +221,34 @@ class TaskDAOTest {
 
 		verify(ps).executeUpdate();
 	    verifyNoMoreInteractions(ps);
-		
+
 	}
-	
+
 	@Test
 	void delete_task_and_return_success()throws Exception{
 		when(ps.executeUpdate()).thenReturn(1);
-		
+
 		Task mockedTask = new Task();
 		mockedTask.setTitle("ABC");
 		mockedTask.setDescription("lorem ipsum bethooven");
 		mockedTask.setStatus("Pending");
 		mockedTask.setId(1);
-		
+
 		long row=dao.delete(mockedTask.getId());
-		
+
 		assertEquals(row,1);
-		
+
 		ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
 		verify(connection).prepareStatement(sqlCap.capture());
 		assertTrue(sqlCap.getValue().toUpperCase().contains("DELETE"));
 		InOrder inOrder=inOrder(ps);
 		inOrder.verify(ps).setInt(1, 1);
-		
+
 
 
 		verify(ps).executeUpdate();
 	    verifyNoMoreInteractions(ps);
-		
+
 	}
 
 }
