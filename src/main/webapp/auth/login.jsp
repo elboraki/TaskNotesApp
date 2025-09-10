@@ -9,14 +9,21 @@ String ctx = request.getContextPath();
 
 
 <!-- Optional flash message -->
-<c:if test="${not empty message}">
-	<p
-		style="background: #e8f5e9; border: 1px solid #c8e6c9; padding: 10px; border-radius: 6px;">
-		${message}</p>
-</c:if>
+<div class="mt-2">
+	<!-- Optional flash message -->
+	<c:if test="${not empty sessionScope.flashOk}">
+		<div class="alert alert-success">${sessionScope.flashOk}</div>
+		<c:remove var="flashOk" scope="session" />
+	</c:if>
+
+	<c:if test="${not empty sessionScope.flashErr}">
+		<div class="alert alert-danger">${sessionScope.flashErr}</div>
+		<c:remove var="flashErr" scope="session" />
+	</c:if>
+</div>
 
 <div class="container mt-4">
-	<form class="col g-3 mb-3" action="/login" method="post">
+	<form class="col g-3 mb-3" action="<%=ctx%>/login" method="post">
 
 		<div class="col-4">
 			<label class="form-label">Login:</label> <input class="form-control"
