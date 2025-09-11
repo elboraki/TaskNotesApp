@@ -1,12 +1,15 @@
 package persistance;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import com.labgeek.models.Category;
 import com.labgeek.DAO.INoteDAO;
 import com.labgeek.models.Note;
+import com.labgeek.models.Task;
 import com.labgeek.models.User;
 import com.labgeek.utils.DatabaseConnection;
 
@@ -25,11 +28,12 @@ public class NoteDAO implements INoteDAO {
 			note.setBody(rs.getString("body"));
 
 			Category category = new Category();
-			category.setName("");
+			category.setName(rs.getString("name"));
 			category.setId(rs.getInt("category_id"));
 
 			User user = new User();
 			user.setId(rs.getInt("user_id"));
+			user.setLogin(rs.getString("login"));
 
 			note.setCategory(category);
 			note.setUser(user);
@@ -43,7 +47,41 @@ public class NoteDAO implements INoteDAO {
 
 	@Override
 	public List<Note> getAll(int offset, int limit, String search) throws SQLException {
-		// TODO Auto-generated method stub
+		String sql = "SELECT n.id,n.body,c.name FROM notes AS n JOIN categorie AS c ON n.category_id=c.id";
+		String whereSql = "WHERE body like ?";
+		String orderSql = "ORDER BY id DESC limit ? offset ?";
+		int idx = 1;
+		List<Note> noteList = new ArrayList<>();
+		String query = "";
+		if (search != null && !search.isEmpty()) {
+			query = sql + " " + whereSql + " " + orderSql;
+			System.out.println("Query Note " + query);
+
+		} else {
+			query = sql + " " + orderSql;
+
+		}
+		try {
+			PreparedStatement ps = getConn().prepareStatement(sql);
+			if (search != null && !search.isEmpty()) {
+				ps.setString(1, "%" + search + "%");
+				ps.setInt(2, limit);
+				ps.setInt(3, offset);
+			} else {
+				ps.setInt(1, limit);
+				ps.setInt(2, offset);
+			}
+
+			ResultSet rs = ps.executeQuery();
+			System.out.println("Column ABC");
+			while (rs.next()) {
+				noteList.add(map(rs));
+
+			}
+			return noteList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
