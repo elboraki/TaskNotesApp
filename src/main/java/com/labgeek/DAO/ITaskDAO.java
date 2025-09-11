@@ -9,9 +9,6 @@ public interface ITaskDAO {
 
 	List<Task> findAll(int offset,int limit,String search) throws SQLException;
 
-	List<Task> findByUser() throws SQLException;
-
-	List<Task> findByStatus() throws SQLException;
 
 	Task getTaskById(int id) throws SQLException;
 

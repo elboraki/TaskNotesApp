@@ -68,17 +68,6 @@ public class TaskDAO implements ITaskDAO {
 		return null;
 	}
 
-	@Override
-	public List<Task> findByUser() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Task> findByStatus() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public Task getTaskById(int id) throws SQLException {
