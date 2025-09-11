@@ -9,7 +9,6 @@ import java.util.List;
 import com.labgeek.models.Category;
 import com.labgeek.DAO.INoteDAO;
 import com.labgeek.models.Note;
-import com.labgeek.models.Task;
 import com.labgeek.models.User;
 import com.labgeek.utils.DatabaseConnection;
 
@@ -47,7 +46,8 @@ public class NoteDAO implements INoteDAO {
 
 	@Override
 	public List<Note> getAll(int offset, int limit, String search) throws SQLException {
-		String sql = "SELECT n.id,n.body,c.name FROM notes AS n JOIN categorie AS c ON n.category_id=c.id";
+		String sql = "SELECT n.id,n.body,c.name,u.id,u.login FROM notes AS n "
+				+ "JOIN categorie AS c ON n.category_id=c.id " + "JOIN users ON n.user_id=u.id";
 		String whereSql = "WHERE body like ?";
 		String orderSql = "ORDER BY id DESC limit ? offset ?";
 		int idx = 1;
