@@ -38,7 +38,7 @@ String ctx = request.getContextPath();
 	</form>
 </div>
 <c:choose>
-	<c:when test="${empty tasks}">
+	<c:when test="${empty notes}">
 		<p>No notes found.</p>
 	</c:when>
 	<c:otherwise>
@@ -47,7 +47,7 @@ String ctx = request.getContextPath();
 				<div class="col-sm-3">
 					<div class="card">
 						<div class="card-body">
-							<h5 class="card-title">${note.name}</h5>
+							<h5 class="card-title">${note.category.name}</h5>
 							<p class="card-text">${note.body}}</p>
 							<a href="#" class="btn btn-primary">+</a> <a
 								href="<%= ctx %>/notes?action=delete&id=${note.id}"
@@ -62,7 +62,7 @@ String ctx = request.getContextPath();
 		</div>
 
 
-		<nav aria-label="Page navigation example">
+		<nav aria-label="Page navigation example" class="mt-2">
 			<ul class="pagination">
 				<%--For displaying Previous link except for the 1st page --%>
 				<c:if test="${currentPage != 1}">

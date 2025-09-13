@@ -46,27 +46,30 @@ public class NoteDAO implements INoteDAO {
 
 	@Override
 	public List<Note> getAll(int offset, int limit, String search) throws SQLException {
-		String sql = "SELECT n.id,n.body,c.name,u.id,u.login FROM notes AS n "
-				+ "JOIN categorie AS c ON n.category_id=c.id " + "JOIN users ON n.user_id=u.id";
-		String whereSql = "WHERE body like ?";
-		String orderSql = "ORDER BY id DESC limit ? offset ?";
-		int idx = 1;
-		List<Note> noteList = new ArrayList<>();
-		String query = "";
-		if (search != null && !search.isEmpty()) {
-			query = sql + " " + whereSql + " " + orderSql;
-			System.out.println("Query Note " + query);
-
-		} else {
-			query = sql + " " + orderSql;
-
-		}
+			
 		try {
-			PreparedStatement ps = getConn().prepareStatement(sql);
+			String sql = "SELECT n.id,n.body,n.category_id,n.user_id,c.name,u.id,u.login FROM notes AS n "
+					+ "JOIN categorie AS c ON n.category_id=c.id " + "JOIN users AS u ON n.user_id=u.id";
+			String whereSql = "WHERE body like ?";
+			String orderSql = "ORDER BY n.id DESC limit ? offset ?";
+			int idx = 1;
+			List<Note> noteList = new ArrayList<>();
+			String query = "";
+			if (search != null && !search.isEmpty()) {
+				query = sql + " " + whereSql + " " + orderSql;
+				System.out.println("Query Note " + query);
+
+			} else {
+				query = sql + " " + orderSql;
+
+			}
+			System.out.println("Query Note==============> " + query);
+			PreparedStatement ps = getConn().prepareStatement(query);
 			if (search != null && !search.isEmpty()) {
 				ps.setString(1, "%" + search + "%");
 				ps.setInt(2, limit);
 				ps.setInt(3, offset);
+				
 			} else {
 				ps.setInt(1, limit);
 				ps.setInt(2, offset);
@@ -108,5 +111,27 @@ public class NoteDAO implements INoteDAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public int count(String search) throws SQLException {
+		String sql = "SELECT count(*) from notes";
+		if (search != null && !search.isEmpty()) {
+			sql += " WHERE body LIKE ?";
+		}
+		try {
+			PreparedStatement ps = getConn().prepareStatement(sql);
+			if (search != null && !search.isEmpty()) {
+				ps.setString(1, "%" + search + "%");
+			}
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+
+			return rs.getInt(1);
+		} catch (SQLException e) {
+			throw new SQLException(e);
+		}
+	}
+	
+	
 
 }

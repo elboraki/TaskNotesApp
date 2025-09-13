@@ -18,5 +18,8 @@ public interface INoteDAO {
 	int delete(int id) throws SQLException;
 	// get by id
 	Note getById(int id) throws SQLException;
+	
+	int count(String Search) throws SQLException;
+
 
 }
