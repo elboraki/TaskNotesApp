@@ -53,7 +53,7 @@ public class AuthentificationFilter implements Filter {
 	        if (loggedIn || loginRequest || staticResources) {
 	            chain.doFilter(request, response); 
 	        } else {
-	            httpResponse.sendRedirect(loginURI);
+	            httpResponse.sendRedirect(loginServlet);
 	        }
 	}
 
