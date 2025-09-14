@@ -46,7 +46,7 @@ public class NoteDAO implements INoteDAO {
 
 	@Override
 	public List<Note> getAll(int offset, int limit, String search) throws SQLException {
-			
+
 		try {
 			String sql = "SELECT n.id,n.body,n.category_id,n.user_id,c.name,u.id,u.login FROM notes AS n "
 					+ "JOIN categorie AS c ON n.category_id=c.id " + "JOIN users AS u ON n.user_id=u.id";
@@ -69,7 +69,7 @@ public class NoteDAO implements INoteDAO {
 				ps.setString(1, "%" + search + "%");
 				ps.setInt(2, limit);
 				ps.setInt(3, offset);
-				
+
 			} else {
 				ps.setInt(1, limit);
 				ps.setInt(2, offset);
@@ -108,8 +108,21 @@ public class NoteDAO implements INoteDAO {
 
 	@Override
 	public Note getById(int id) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			String sql = "SELECT n.id,n.body,n.category_id,n.user_id,c.name,u.id,u.login FROM notes AS n "
+					+ "JOIN categorie AS c ON n.category_id=c.id " + "JOIN users AS u ON n.user_id=u.id";
+			String whereSql = "WHERE n.id=?";
+			String query = sql + whereSql;
+			PreparedStatement ps = getConn().prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			Note note = null;
+			rs.next();
+			note = map(rs);
+			return note;
+		} catch (Exception e) {
+			throw new SQLException();
+		}
+
 	}
 
 	@Override
@@ -131,7 +144,5 @@ public class NoteDAO implements INoteDAO {
 			throw new SQLException(e);
 		}
 	}
-	
-	
 
 }

@@ -24,11 +24,16 @@ String ctx = request.getContextPath();
 			<textarea class="form-control" name="description" rows="3"></textarea>
 		</div>
 		<div class="mb-3">
-			<label class="form-label">Category</label> <select class="form-select" name="status"
-				aria-label="Default select status">
-				<option value="Pending" selected="Pending">Pending</option>
-				<option value="In Progress">In Progress</option>
-				<option value="Completed">Completed</option>
+
+
+			<label class="form-label">Category</label> <select
+				class="form-select" name="status"
+				aria-label="Default select category">
+				<option value="1" selected="1">Work</option>
+				<option value="2">Personal</option>
+				<option value="3">Study</option>
+				<option value="4">Travel</option>
+				<option value="5">Finance</option>
 			</select>
 		</div>
 
