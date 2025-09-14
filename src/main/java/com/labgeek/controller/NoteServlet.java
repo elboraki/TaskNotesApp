@@ -38,28 +38,36 @@ public class NoteServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		int page = 1;
-		int recordsPerPage = 10;
-		String search = request.getParameter("search"); // new
-		if (request.getParameter("page") != null) {
-			page = Integer.parseInt(request.getParameter("page"));
-		}
-		try {
-			List<Note> notes = noteDAO.getAll((page - 1) * recordsPerPage, recordsPerPage, search);
-			request.setAttribute("notes", notes);
-			int noOfRecords = noteDAO.count(search);
-			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
-			request.setAttribute("noOfPages", noOfPages);
-			request.setAttribute("currentPage", page);
-			request.setAttribute("contentPage", "notes/notes.jsp");
-			request.setAttribute("search", search == null ? "" : search);
-
+		
+		if(request.getParameter("action")!=null && request.getParameter("action").toString().equals("new")) {
+			request.setAttribute("contentPage", "notes/addNote.jsp");
+			System.out.println("");
 			request.getRequestDispatcher("layout.jsp").forward(request, response);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}else {
+			// TODO Auto-generated method stub
+			int page = 1;
+			int recordsPerPage = 10;
+			String search = request.getParameter("search"); // new
+			if (request.getParameter("page") != null) {
+				page = Integer.parseInt(request.getParameter("page"));
+			}
+			try {
+				List<Note> notes = noteDAO.getAll((page - 1) * recordsPerPage, recordsPerPage, search);
+				request.setAttribute("notes", notes);
+				int noOfRecords = noteDAO.count(search);
+				int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+				request.setAttribute("noOfPages", noOfPages);
+				request.setAttribute("currentPage", page);
+				request.setAttribute("contentPage", "notes/notes.jsp");
+				request.setAttribute("search", search == null ? "" : search);
+
+				request.getRequestDispatcher("layout.jsp").forward(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		
 
 	}
 
