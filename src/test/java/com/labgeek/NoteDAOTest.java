@@ -30,6 +30,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.labgeek.models.Category;
 import com.labgeek.models.Note;
 import com.labgeek.models.Task;
 import com.labgeek.models.User;
@@ -93,6 +94,43 @@ class NoteDAOTest {
 
 			verify(ps, times(1)).executeQuery();
 			verify(rs, times(3)).next(); // T, T, F
+		  
+	  }
+	  
+	  
+	  @Test
+	  void test_insert_note_success() throws SQLException {
+		  when(ps.executeUpdate()).thenReturn(1);
+
+		  Note mockedNote=new Note();
+		  
+		  User user=new User();
+		  user.setId(1);
+		  
+		  Category cat=new Category();
+		  cat.setId(2);
+		  
+		  mockedNote.setBody("lorem ipsum");
+		  mockedNote.setId(1);
+		  mockedNote.setUser(user);
+		  mockedNote.setCategory(cat);
+		  
+		  int expectedResult=dao.create(mockedNote);
+		  
+		  assertEquals(1, expectedResult);
+		  
+		  
+		  ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
+			verify(connection).prepareStatement(sqlCap.capture());
+			String sql = sqlCap.getValue().toUpperCase();
+			assertTrue(sql.contains("INSERT"), "Expected inserT QUERY");
+
+			// Parameter order for search branch
+			verify(ps).setString(1, mockedNote.getBody());
+			verify(ps).setInt(2, mockedNote.getUser().getId()); 
+			verify(ps).setInt(3, mockedNote.getCategory().getId()); 
+			verify(ps, times(1)).executeUpdate();
+		    verifyNoMoreInteractions(ps);
 		  
 	  }
 	

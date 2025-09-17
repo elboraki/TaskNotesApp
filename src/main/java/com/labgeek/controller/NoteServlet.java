@@ -7,13 +7,18 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.labgeek.models.Task;
+import com.labgeek.models.User;
+import com.mysql.cj.Session;
 
 import persistance.NoteDAO;
 import persistance.TaskDAO;
 
 import java.util.List;
+import java.util.Locale.Category;
+
 import com.labgeek.models.Note;
 
 /**
@@ -78,8 +83,30 @@ public class NoteServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		HttpSession session=request.getSession();
+		try {
+			NoteDAO noteDAO=new NoteDAO();
+			Note note=new Note();
+			com.labgeek.models.Category category=new com.labgeek.models.Category();
+			User user=(User) session.getAttribute("currentUser");
+			note.setUser(user);
+			
+			note.setBody(request.getParameter("body").toString());
+			category.setId(Integer.parseInt(request.getParameter("categorie").toString()));
+			note.setCategory(category);
+			int row=noteDAO.create(note);
+			if (row == 1) {
+				session.setAttribute("flashOk", "Success your note has been deleted");
+
+			} else {
+				session.setAttribute("flashErr", "Error your note has not been deleted");
+
+			}
+			response.sendRedirect(request.getContextPath() + "/notes");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

@@ -58,6 +58,9 @@ public class LoginServlet extends HttpServlet {
 				session.setAttribute("flashOk", "Success authentification !");
 
 				session.setAttribute("username", currentUser.getLogin());
+				session.setAttribute("userId", currentUser.getId());
+				session.setAttribute("currentUser", currentUser);
+
 				response.sendRedirect(request.getContextPath() + "/tasks");
 			} else {
 				session.setAttribute("flashErr", "Login or password is incorrect");

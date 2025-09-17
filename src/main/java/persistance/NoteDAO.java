@@ -90,8 +90,19 @@ public class NoteDAO implements INoteDAO {
 
 	@Override
 	public int create(Note note) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		try {
+			String query="INSERT INTO notes(body,user_id,category_id) VALUES(?,?,?)";
+			PreparedStatement ps=getConn().prepareStatement(query);
+			ps.setString(1, note.getBody());
+			ps.setInt(2, note.getUser().getId());
+			ps.setInt(3, note.getCategory().getId());
+			int row=ps.executeUpdate();
+			return row;
+		} catch (Exception e) {
+			throw new SQLException();
+		}
+		
 	}
 
 	@Override

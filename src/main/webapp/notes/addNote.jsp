@@ -21,13 +21,13 @@ String ctx = request.getContextPath();
 
 		<div class="mb-3">
 			<label class="form-label">body</label>
-			<textarea class="form-control" name="description" rows="3"></textarea>
+			<textarea class="form-control" name="body" rows="3"></textarea>
 		</div>
 		<div class="mb-3">
 
 
 			<label class="form-label">Category</label> <select
-				class="form-select" name="status"
+				class="form-select" name="categorie"
 				aria-label="Default select category">
 				<option value="1" selected="1">Work</option>
 				<option value="2">Personal</option>
