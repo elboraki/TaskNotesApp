@@ -125,6 +125,7 @@ public class NoteDAO implements INoteDAO {
 			String whereSql = "WHERE n.id=?";
 			String query = sql + whereSql;
 			PreparedStatement ps = getConn().prepareStatement(query);
+			ps.setInt(1, 1);
 			ResultSet rs = ps.executeQuery();
 			Note note = null;
 			rs.next();

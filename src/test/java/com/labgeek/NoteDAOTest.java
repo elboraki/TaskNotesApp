@@ -134,7 +134,34 @@ class NoteDAOTest {
 		  
 	  }
 	
-	
+	  @Test
+	  void test_get_note_by_id() throws SQLException {
+		  
+			  when(ps.executeQuery()).thenReturn(rs);
+			  when(rs.next()).thenReturn(true,true,false);
+			  when(rs.getInt("id")).thenReturn(1);
+			  when(rs.getString("body")).thenReturn("Learning Java");
+			  
+			  Note noteExpected=dao.getById(1);
+			  
+			  assertEquals(noteExpected.getId(),1);
+			  assertEquals(noteExpected.getBody(),"Learning Java");
+
+			  
+			  ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
+				verify(connection).prepareStatement(sqlCap.capture());
+				String sql = sqlCap.getValue().toUpperCase();
+				assertTrue(sql.contains("WHERE"), "Expected WHERE when search is provided");
+
+				// Parameter order for search branch
+				verify(ps).setInt(1, 1); // limit
+
+				verify(ps, times(1)).executeQuery();
+				verify(rs, times(1)).next(); 
+				verify(dao,times(1)).map(rs);
+				
+	  }
+	  
 
 	
 }
