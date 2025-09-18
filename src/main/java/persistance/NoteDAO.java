@@ -100,15 +100,28 @@ public class NoteDAO implements INoteDAO {
 			ps.setInt(3, note.getCategory().getId());
 			int row=ps.executeUpdate();
 			return row;
-		} catch (Exception e) {
-			throw new SQLException();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		return 0;
 		
 	}
 
 	@Override
 	public int update(Note note) throws SQLException {
-		// TODO Auto-generated method stub
+
+		try {
+			String query="UPDATE notes SET body=?,user_id=?,category_id=? WHERE id=?";
+			PreparedStatement ps=getConn().prepareStatement(query);
+			ps.setString(1, note.getBody());
+			ps.setInt(2, note.getUser().getId());
+			ps.setInt(3, note.getCategory().getId());
+			ps.setInt(4, note.getId());
+			int row=ps.executeUpdate();
+			return row;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return 0;
 	}
 

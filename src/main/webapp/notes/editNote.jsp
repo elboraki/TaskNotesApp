@@ -18,7 +18,9 @@ String ctx = request.getContextPath();
 <div class="container mt-4">
 
 	<form class="row g-3 mb-3" method="post" action="<%=ctx%>/notes">
-		<input type="hidden" name="action" value="edit"> 
+		<input type="hidden" name="action" value="edit"> <input
+			type="hidden" name="id" value="${note.getId()}">
+
 		<div class="mb-3">
 			<label class="form-label">body</label>
 			<textarea class="form-control" name="body" rows="3">${note.getBody()}</textarea>

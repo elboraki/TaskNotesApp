@@ -48,7 +48,7 @@ String ctx = request.getContextPath();
 					<div class="card">
 						<div class="card-body">
 							<h5 class="card-title">${note.category.name}</h5>
-							<p class="card-text">${note.body}}</p>
+							<p class="card-text">${note.body}</p>
 							<a href="#" class="btn btn-primary">+</a> <a
 								href="<%= ctx %>/notes?action=delete&id=${note.id}"
 								onclick="return confirm('Delete task #${note.id}?')"
