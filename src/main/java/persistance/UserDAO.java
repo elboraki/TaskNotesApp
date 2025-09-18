@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.labgeek.models.Task;
 import com.labgeek.models.User;
 import com.labgeek.utils.DatabaseConnection;
 

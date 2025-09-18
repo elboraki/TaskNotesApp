@@ -6,8 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import com.labgeek.models.Category;
+
 import com.labgeek.DAO.INoteDAO;
+import com.labgeek.models.Category;
 import com.labgeek.models.Note;
 import com.labgeek.models.User;
 import com.labgeek.utils.DatabaseConnection;

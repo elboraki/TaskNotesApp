@@ -2,6 +2,7 @@ package com.labgeek.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,17 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.labgeek.models.Task;
+import com.labgeek.models.Note;
 import com.labgeek.models.User;
-import com.mysql.cj.Session;
 
 import persistance.NoteDAO;
-import persistance.TaskDAO;
-
-import java.util.List;
-import java.util.Locale.Category;
-
-import com.labgeek.models.Note;
 
 /**
  * Servlet implementation class NoteServlet
@@ -46,10 +40,14 @@ public class NoteServlet extends HttpServlet {
 		
 		if(request.getParameter("action")!=null && request.getParameter("action").toString().equals("new")) {
 			request.setAttribute("contentPage", "notes/addNote.jsp");
-			System.out.println("");
 			request.getRequestDispatcher("layout.jsp").forward(request, response);
-		}else {
-			// TODO Auto-generated method stub
+		}
+		
+		else if(request.getParameter("action")!=null && request.getParameter("action").toString().equals("edit")) {
+			request.setAttribute("contentPage", "notes/editNote.jsp");
+			request.getRequestDispatcher("layout.jsp").forward(request, response);
+		}
+		else {
 			int page = 1;
 			int recordsPerPage = 10;
 			String search = request.getParameter("search"); // new
