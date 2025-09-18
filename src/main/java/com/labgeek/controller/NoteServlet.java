@@ -44,8 +44,21 @@ public class NoteServlet extends HttpServlet {
 		}
 		
 		else if(request.getParameter("action")!=null && request.getParameter("action").toString().equals("edit")) {
-			request.setAttribute("contentPage", "notes/editNote.jsp");
-			request.getRequestDispatcher("layout.jsp").forward(request, response);
+			try {
+				int id=Integer.parseInt(request.getParameter("id"));
+				System.out.println("id--->"+id);
+				Note currentNote=noteDAO.getById(id);
+				System.out.print("id--->"+currentNote.getBody());
+
+				request.setAttribute("note", currentNote);
+				request.setAttribute("contentPage", "notes/editNote.jsp");
+				request.getRequestDispatcher("layout.jsp").forward(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
 		}
 		else {
 			int page = 1;

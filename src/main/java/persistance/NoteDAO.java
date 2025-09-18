@@ -124,17 +124,22 @@ public class NoteDAO implements INoteDAO {
 			String sql = "SELECT n.id,n.body,n.category_id,n.user_id,c.name,u.id,u.login FROM notes AS n "
 					+ "JOIN categorie AS c ON n.category_id=c.id " + "JOIN users AS u ON n.user_id=u.id";
 			String whereSql = "WHERE n.id=?";
-			String query = sql + whereSql;
+			String query = sql + " "+whereSql;
+			System.out.println(query);
 			PreparedStatement ps = getConn().prepareStatement(query);
-			ps.setInt(1, 1);
+			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			Note note = null;
 			rs.next();
 			note = map(rs);
+			System.out.println(note.getBody().toString());
+			getConn().close();
+
 			return note;
-		} catch (Exception e) {
-			throw new SQLException();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		return null;
 
 	}
 

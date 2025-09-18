@@ -18,12 +18,10 @@ String ctx = request.getContextPath();
 <div class="container mt-4">
 
 	<form class="row g-3 mb-3" method="post" action="<%=ctx%>/notes">
-	       <input type="hidden" name="_method" value="PUT">
-		
-		<input class="form-control" name="id" type="hidden"/>
+		<input type="hidden" name="action" value="edit"> 
 		<div class="mb-3">
 			<label class="form-label">body</label>
-			<textarea class="form-control" name="body" rows="3"></textarea>
+			<textarea class="form-control" name="body" rows="3">${note.getBody()}</textarea>
 		</div>
 		<div class="mb-3">
 
@@ -31,11 +29,16 @@ String ctx = request.getContextPath();
 			<label class="form-label">Category</label> <select
 				class="form-select" name="categorie"
 				aria-label="Default select category">
-				<option value="1" selected="1">Work</option>
-				<option value="2">Personal</option>
-				<option value="3">Study</option>
-				<option value="4">Travel</option>
-				<option value="5">Finance</option>
+				<option value="1"
+					<c:if test="${note.getCategory().getId() == 1}">selected</c:if>>Work</option>
+				<option value="2"
+					<c:if test="${note.getCategory().getId() == 2}">selected</c:if>>Personal</option>
+				<option value="3"
+					<c:if test="${note.getCategory().getId() == 3}">selected</c:if>>Study</option>
+				<option value="4"
+					<c:if test="${note.getCategory().getId() == 4}">selected</c:if>>Travel</option>
+				<option value="5"
+					<c:if test="${note.getCategory().getId() == 5}">selected</c:if>>Finance</option>
 			</select>
 		</div>
 
