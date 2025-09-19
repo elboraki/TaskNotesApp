@@ -6,6 +6,8 @@
 <meta charset="UTF-8">
 <title>TaskNote App</title>
 <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+<link href="assets/icons/bootstrap-icons.min.css" rel="stylesheet" />
+
 
 </head>
 <body>

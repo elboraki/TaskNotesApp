@@ -8,8 +8,8 @@ String ctx = request.getContextPath();
 
 <div class="topbar">
 	<h1>Tasks</h1>
-	<a class="btn btn-primary" href="<%=ctx%>/tasks?action=new">+ New
-		Task</a>
+	<a class="btn btn-primary" href="<%=ctx%>/tasks?action=new"><i
+		class="bi bi-plus-circle-fill"></i> New Task</a>
 </div>
 
 <div class="mt-2">
@@ -33,7 +33,9 @@ String ctx = request.getContextPath();
 				placeholder="Search tasks" value="${fn:escapeXml(search)}">
 		</div>
 		<div class="col-auto">
-			<button type="submit" class="btn btn-primary mb-3">Search</button>
+			<button type="submit" class="btn btn-primary mb-3">
+				<i class="bi bi-search"></i> Search
+			</button>
 		</div>
 	</form>
 </div>
@@ -61,15 +63,14 @@ String ctx = request.getContextPath();
 						<td><c:out value="${t.description}" /></td>
 						<td>${t.status}</td>
 						<td>${t.userId}</td>
-						<td class="actions">
-			
-						<a class="btn btn-warning"
-							href="<%= ctx %>/tasks?action=edit&id=${t.id}">Edit</a> 
-							<input type="hidden" _method="delete" />
-							<a
+						<td class="actions"><a class="btn btn-warning"
+							href="<%= ctx %>/tasks?action=edit&id=${t.id}"> <i
+								class="bi bi-pencil-square"></i>
+						</a> <input type="hidden" _method="delete" /> <a
 							class="btn btn-danger"
 							href="<%= ctx %>/tasks?action=delete&id=${t.id}"
-							onclick="return confirm('Delete task #${t.id}?')">Delete</a></td>
+							onclick="return confirm('Delete task #${t.id}?')"><i
+								class="bi bi-trash-fill"></i></a></td>
 					</tr>
 				</c:forEach>
 			</tbody>

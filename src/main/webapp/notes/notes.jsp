@@ -8,8 +8,9 @@ String ctx = request.getContextPath();
 
 <div class="topbar">
 	<h1>Notes</h1>
-	<a class="btn btn-primary" href="<%=ctx%>/notes?action=new">+ New
-		Note</a>
+	<a class="btn btn-primary" href="<%=ctx%>/notes?action=new"> <i
+		class="bi bi-file-earmark-plus-fill"></i>New Note
+	</a>
 </div>
 
 <div class="mt-2">
@@ -33,7 +34,9 @@ String ctx = request.getContextPath();
 				placeholder="Search tasks" value="${fn:escapeXml(search)}">
 		</div>
 		<div class="col-auto">
-			<button type="submit" class="btn btn-primary mb-3">Search</button>
+			<button type="submit" class="btn btn-primary mb-3">
+				<i class="bi bi-search"></i> Search
+			</button>
 		</div>
 	</form>
 </div>
@@ -49,12 +52,13 @@ String ctx = request.getContextPath();
 						<div class="card-body">
 							<h5 class="card-title">${note.category.name}</h5>
 							<p class="card-text">${note.body}</p>
-							<a href="#" class="btn btn-primary">+</a> <a
-								href="<%= ctx %>/notes?action=delete&id=${note.id}"
-								onclick="return confirm('Delete task #${note.id}?')"
-								class="btn btn-danger">-</a> <a
-								href="<%= ctx %>/notes?action=edit&id=${note.id}"
-								class="btn btn-warning">E</a>
+						<a href="<%= ctx %>/notes?action=edit&id=${note.id}"
+								class="btn btn-warning"><i class="bi bi-pencil-square"></i></a>
+
+							<a href="<%= ctx %>/notes?action=delete&id=${note.id}"
+								onclick="return confirm('Delete note #${note.id}?')"
+								class="btn btn-danger"> <i class="bi bi-trash-fill"></i>
+							</a>
 						</div>
 					</div>
 				</div>
