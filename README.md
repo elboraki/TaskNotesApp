@@ -58,9 +58,20 @@ Generate JavaDoc with:
 ```bash
 mvn javadoc:javadoc
 ```
-Documentation will be available in `/target/site/apidocs`.
+Documentation will be available in `/doc`.
 
 ---
+## 📖  use cases
+![Squence Diagram](doc/use-case.png)
+
+## 📖 Flow Diagram
+
+![Squence Diagram](doc/sq-task-note.png)
+
+## 📖 Structure
+
+![Squence Diagram](doc/structure-data.png)
+
 
 ## 📌 Summary
 The **TaskNote App** showcases my ability to design, implement, test, and document a complete Java-based web application using **JSP, Servlets, MySQL, JUnit, Mockito, and JavaDoc**.  
