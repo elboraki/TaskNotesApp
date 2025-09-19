@@ -27,7 +27,7 @@ It demonstrates core concepts of Java web development, testing, and documentatio
 ## ⚙️ Installation & Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/tasknote-app.git
+   git clone https://github.com:elboraki/TaskNotesApp.git
    ```
 2. Import the project into your IDE (IntelliJ / Eclipse / NetBeans).  
 3. Configure **MySQL** database and update `persistence.xml` with your credentials.  
