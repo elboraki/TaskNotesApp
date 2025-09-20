@@ -37,7 +37,7 @@ public class NoteServlet extends HttpServlet {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		if (request.getParameter("action") != null && request.getParameter("action").toString().equals("new")) {
@@ -107,7 +107,7 @@ public class NoteServlet extends HttpServlet {
 	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		System.out.println("===========================" + request.getParameter("action") + "======================");
@@ -144,31 +144,34 @@ public class NoteServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		try {
-			int id = Integer.parseInt(req.getParameter("id"));
-			String body = req.getParameter("body");
-			int cateogry_id = Integer.parseInt(req.getParameter("categorie"));
-
-			NoteDAO noteDAO = new NoteDAO();
-			Note note = noteDAO.getById(id);
-			com.labgeek.models.Category cat = new com.labgeek.models.Category();
-			cat.setId(cateogry_id);
-			User user = (User) session.getAttribute("currentUser");
-			System.out.println("User id-->" + user.getId());
-			note.setBody(body);
-			note.setCategory(cat);
-			note.setUser(user);
-			int row = noteDAO.update(note);
-			if (row == 1) {
-				session.setAttribute("flashOk", "Success your note has been updated");
-
-			} else {
-				session.setAttribute("flashErr", "Error your note has not been updated");
-
+			if(req.getParameter("id")!=null) {
+				
+				int id = Integer.parseInt(req.getParameter("id"));
+				String body = req.getParameter("body");
+				int cateogry_id = Integer.parseInt(req.getParameter("categorie"));
+				
+				NoteDAO noteDAO = new NoteDAO();
+				Note note = noteDAO.getById(id);
+				com.labgeek.models.Category cat = new com.labgeek.models.Category();
+				cat.setId(cateogry_id);
+				User user = (User) session.getAttribute("currentUser");
+				System.out.println("User id-->" + user.getId());
+				note.setBody(body);
+				note.setCategory(cat);
+				note.setUser(user);
+				int row = noteDAO.update(note);
+				if (row == 1) {
+					session.setAttribute("flashOk", "Success your note has been updated");
+					
+				} else {
+					session.setAttribute("flashErr", "Error your note has not been updated");
+					
+				}
+				resp.sendRedirect(req.getContextPath() + "/notes");
 			}
-			resp.sendRedirect(req.getContextPath() + "/notes");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

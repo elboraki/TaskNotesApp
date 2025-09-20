@@ -111,12 +111,11 @@ public class NoteDAO implements INoteDAO {
 	public int update(Note note) throws SQLException {
 
 		try {
-			String query="UPDATE notes SET body=?,user_id=?,category_id=? WHERE id=?";
+			String query="UPDATE notes SET body=?,category_id=? WHERE id=?";
 			PreparedStatement ps=getConn().prepareStatement(query);
 			ps.setString(1, note.getBody());
-			ps.setInt(2, note.getUser().getId());
-			ps.setInt(3, note.getCategory().getId());
-			ps.setInt(4, note.getId());
+			ps.setInt(2, note.getCategory().getId());
+			ps.setInt(3, note.getId());
 			int row=ps.executeUpdate();
 			return row;
 		} catch (SQLException e) {

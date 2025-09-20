@@ -178,9 +178,8 @@ class NoteDAOTest {
 
 		// Parameter order for search branch
 		verify(ps).setString(1, mockedNote.getBody());
-		verify(ps).setInt(2, mockedNote.getUser().getId());
-		verify(ps).setInt(3, mockedNote.getCategory().getId());
-		verify(ps).setInt(4, mockedNote.getId());
+		verify(ps).setInt(2, mockedNote.getCategory().getId());
+		verify(ps).setInt(3, mockedNote.getId());
 		verify(ps, times(1)).executeUpdate();
 		verifyNoMoreInteractions(ps);
 
