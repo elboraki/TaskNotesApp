@@ -39,18 +39,18 @@ public class NoteServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		if(request.getParameter("action")!=null && request.getParameter("action").toString().equals("new")) {
+
+		if (request.getParameter("action") != null && request.getParameter("action").toString().equals("new")) {
 			request.setAttribute("contentPage", "notes/addNote.jsp");
 			request.getRequestDispatcher("layout.jsp").forward(request, response);
 		}
-		
-		else if(request.getParameter("action")!=null && request.getParameter("action").toString().equals("edit")) {
+
+		else if (request.getParameter("action") != null && request.getParameter("action").toString().equals("edit")) {
 			try {
-				int id=Integer.parseInt(request.getParameter("id"));
-				System.out.println("id--->"+id);
-				Note currentNote=noteDAO.getById(id);
-				System.out.print("id--->"+currentNote.getBody());
+				int id = Integer.parseInt(request.getParameter("id"));
+				System.out.println("id--->" + id);
+				Note currentNote = noteDAO.getById(id);
+				System.out.print("id--->" + currentNote.getBody());
 
 				request.setAttribute("note", currentNote);
 				request.setAttribute("contentPage", "notes/editNote.jsp");
@@ -58,10 +58,25 @@ public class NoteServlet extends HttpServlet {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			
-			
-		}
-		else {
+
+		} else if (request.getParameter("action") != null
+				&& request.getParameter("action").toString().equals("delete")) {
+			try {
+				HttpSession session = request.getSession();
+				int id = Integer.parseInt(request.getParameter("id"));
+				int row = noteDAO.delete(id);
+				if (row == 1) {
+					session.setAttribute("flashOk", "Success your note has been deleted");
+
+				} else {
+					session.setAttribute("flashErr", "Error your note has not been deleted");
+
+				}
+				response.sendRedirect(request.getContextPath() + "/notes");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
 			int page = 1;
 			int recordsPerPage = 10;
 			String search = request.getParameter("search"); // new
@@ -84,7 +99,6 @@ public class NoteServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		
 
 	}
 
@@ -95,64 +109,64 @@ public class NoteServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session=request.getSession();
-		System.out.println("==========================="+request.getParameter("action")+"======================");
-		if(request.getParameter("action")!=null && request.getParameter("action").toString().equals("edit")) {
+		HttpSession session = request.getSession();
+		System.out.println("===========================" + request.getParameter("action") + "======================");
+		if (request.getParameter("action") != null && request.getParameter("action").toString().equals("edit")) {
 			System.out.println("=====================PUT===================");
 
 			doPut(request, response);
-		}else {
-			
+		} else {
+
 			try {
-				NoteDAO noteDAO=new NoteDAO();
-				Note note=new Note();
-				com.labgeek.models.Category category=new com.labgeek.models.Category();
-				User user=(User) session.getAttribute("currentUser");
+				NoteDAO noteDAO = new NoteDAO();
+				Note note = new Note();
+				com.labgeek.models.Category category = new com.labgeek.models.Category();
+				User user = (User) session.getAttribute("currentUser");
 				note.setUser(user);
-				
+
 				note.setBody(request.getParameter("body").toString());
 				category.setId(Integer.parseInt(request.getParameter("categorie").toString()));
 				note.setCategory(category);
-				int row=noteDAO.create(note);
+				int row = noteDAO.create(note);
 				if (row == 1) {
 					session.setAttribute("flashOk", "Success your note has been deleted");
-					
+
 				} else {
 					session.setAttribute("flashErr", "Error your note has not been deleted");
-					
+
 				}
 				response.sendRedirect(request.getContextPath() + "/notes");
-			}catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
 	}
-	
+
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		HttpSession session=req.getSession();
+		HttpSession session = req.getSession();
 		try {
-			int id=Integer.parseInt(req.getParameter("id"));
-			String body=req.getParameter("body");
-			int cateogry_id=Integer.parseInt(req.getParameter("categorie"));
-			
-			NoteDAO noteDAO =new NoteDAO();
-			Note note=noteDAO.getById(id);
-			com.labgeek.models.Category cat=new com.labgeek.models.Category();
+			int id = Integer.parseInt(req.getParameter("id"));
+			String body = req.getParameter("body");
+			int cateogry_id = Integer.parseInt(req.getParameter("categorie"));
+
+			NoteDAO noteDAO = new NoteDAO();
+			Note note = noteDAO.getById(id);
+			com.labgeek.models.Category cat = new com.labgeek.models.Category();
 			cat.setId(cateogry_id);
-			User user=(User) session.getAttribute("currentUser");
-			System.out.println("User id-->"+user.getId());
+			User user = (User) session.getAttribute("currentUser");
+			System.out.println("User id-->" + user.getId());
 			note.setBody(body);
 			note.setCategory(cat);
 			note.setUser(user);
-			int row=noteDAO.update(note);
+			int row = noteDAO.update(note);
 			if (row == 1) {
 				session.setAttribute("flashOk", "Success your note has been updated");
-				
+
 			} else {
 				session.setAttribute("flashErr", "Error your note has not been updated");
-				
+
 			}
 			resp.sendRedirect(req.getContextPath() + "/notes");
 		} catch (SQLException e) {
