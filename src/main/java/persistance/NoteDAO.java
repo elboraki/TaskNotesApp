@@ -127,7 +127,15 @@ public class NoteDAO implements INoteDAO {
 
 	@Override
 	public int delete(int id) throws SQLException {
-		// TODO Auto-generated method stub
+		try {
+			String query="DELETE FROM notes WHERE id=?";
+			PreparedStatement ps=getConn().prepareStatement(query);
+			ps.setInt(1,id);
+			int row=ps.executeUpdate();
+			return row;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return 0;
 	}
 
