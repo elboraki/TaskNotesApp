@@ -7,13 +7,12 @@
 <title>TaskNote App</title>
 <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
 <link href="assets/icons/bootstrap-icons.min.css" rel="stylesheet" />
-
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 </head>
 <body>
 <%@ include file="partials/header.jsp" %>
 <div class="container">
-  
   <jsp:include page="${contentPage}" />
 </div>
 
