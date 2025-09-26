@@ -157,4 +157,13 @@ public class TaskDAO implements ITaskDAO {
 		}
 	}
 
+	@Override
+	public List<ResultSet> getTotalTasksByStatus() throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	// 		// SELECT count(*),status FROM `tasks` JOIN users ON tasks.user_id=users.id where tasks.user_id=1 GROUP by status 
+
+
 }

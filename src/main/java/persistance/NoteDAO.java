@@ -183,4 +183,11 @@ public class NoteDAO implements INoteDAO {
 		}
 	}
 
+	@Override
+	public List<ResultSet> getTotalNoteByCategory() throws SQLException {
+		return null;
+	}
+	
+	
+
 }

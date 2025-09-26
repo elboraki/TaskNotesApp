@@ -1,5 +1,6 @@
 package com.labgeek.DAO;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -7,8 +8,7 @@ import com.labgeek.models.Task;
 
 public interface ITaskDAO {
 
-	List<Task> findAll(int offset,int limit,String search) throws SQLException;
-
+	List<Task> findAll(int offset, int limit, String search) throws SQLException;
 
 	Task getTaskById(int id) throws SQLException;
 
@@ -25,5 +25,7 @@ public interface ITaskDAO {
 	int delete(int id) throws SQLException;
 
 	int count(String Search) throws SQLException;
+
+	List<ResultSet> getTotalTasksByStatus() throws SQLException;
 
 }
