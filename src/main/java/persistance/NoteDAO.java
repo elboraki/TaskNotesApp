@@ -10,6 +10,7 @@ import java.util.List;
 import com.labgeek.DAO.INoteDAO;
 import com.labgeek.models.Category;
 import com.labgeek.models.Note;
+import com.labgeek.models.TotalNoteCategory;
 import com.labgeek.models.User;
 import com.labgeek.utils.DatabaseConnection;
 
@@ -184,8 +185,20 @@ public class NoteDAO implements INoteDAO {
 	}
 
 	@Override
-	public List<ResultSet> getTotalNoteByCategory() throws SQLException {
-		return null;
+	public List<TotalNoteCategory> getTotalNoteByCategory(int userId) throws SQLException {
+		String query="SELECT count(*) as total,categorie.name from notes join categorie on notes.category_id=categorie.id join users on users.id=notes.user_id where user_id=? group by categorie.name ";
+		PreparedStatement ps=getConn().prepareStatement(query);
+		ps.setInt(1, userId);
+		ResultSet rs=ps.executeQuery();
+		List<TotalNoteCategory> list=new ArrayList<TotalNoteCategory>();
+		while(rs.next()) {
+			TotalNoteCategory stats=new TotalNoteCategory();
+			stats.setTotal(rs.getInt("total"));
+			stats.setCategory(rs.getString("name"));
+			list.add(stats);
+		}
+		return list;
+		
 	}
 	
 	

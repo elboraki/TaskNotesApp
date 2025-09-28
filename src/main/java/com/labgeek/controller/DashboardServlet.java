@@ -13,7 +13,10 @@ import javax.servlet.http.HttpSession;
 
 import com.labgeek.models.User;
 import com.labgeek.models.TaskTotalStatus;
+import com.labgeek.models.TotalNoteCategory;
 
+
+import persistance.NoteDAO;
 import persistance.TaskDAO;
 
 /**
@@ -41,10 +44,17 @@ public class DashboardServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		try {
 			User user = (User) session.getAttribute("currentUser");
-			TaskDAO dao = new TaskDAO();
 			System.out.println("user id is "+user);
-			List<TaskTotalStatus> list = dao.getTotalTasksByStatus(user.getId());
+			
+			TaskDAO taskDao = new TaskDAO();
+			List<TaskTotalStatus> list = taskDao.getTotalTasksByStatus(user.getId());
 			request.setAttribute("taskStatusList", list);
+			
+			NoteDAO noteDao=new NoteDAO();
+			List<TotalNoteCategory> statsNote = noteDao.getTotalNoteByCategory(user.getId());
+			request.setAttribute("statsNote", statsNote);
+
+			
 			request.setAttribute("contentPage", "dashboard/dashboard.jsp");
 			request.getRequestDispatcher("layout.jsp").forward(request, response);
 		} catch (SQLException e) {

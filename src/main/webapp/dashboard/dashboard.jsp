@@ -79,13 +79,29 @@ String ctx = request.getContextPath();
 		}
 	}
 
+	
+	
+	
+	var totalNotes=[
+		
+		  <c:forEach var="s" items="${statsNote}" varStatus="loop">
+	        ${s.getTotal()}<c:if test="${!loop.last}">,</c:if>
+	      </c:forEach>
+		];
+		
+		var categoryList=[
+			
+			  <c:forEach var="s" items="${statsNote}" varStatus="loop">
+		        "${s.getCategory()}"<c:if test="${!loop.last}">,</c:if>
+		      </c:forEach>
+			];
 	var optionsPie = {
 		chart : {
 			type : 'pie',
 			height : 400
 		},
-		series : [ 30, 40, 45, 50, 49, 60, 70, 91, 125 ],
-		labels : [ 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999 ],
+		series : totalNotes,
+		labels : categoryList,
 		title : {
 			text : "Note by category",
 			align : "center",

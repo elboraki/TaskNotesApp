@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.labgeek.models.Note;
+import com.labgeek.models.TotalNoteCategory;
 
 public interface INoteDAO {
 
@@ -26,5 +27,5 @@ public interface INoteDAO {
 
 	int count(String Search) throws SQLException;
 
-	List<ResultSet> getTotalNoteByCategory() throws SQLException;
+	List<TotalNoteCategory> getTotalNoteByCategory(int userid) throws SQLException;
 }
