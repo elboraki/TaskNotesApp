@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.labgeek.DAO.ITaskDAO;
 import com.labgeek.models.Task;
+import com.labgeek.models.TaskTotalStatus;
 import com.labgeek.utils.DatabaseConnection;
 
 public class TaskDAO implements ITaskDAO {
@@ -158,9 +159,20 @@ public class TaskDAO implements ITaskDAO {
 	}
 
 	@Override
-	public List<ResultSet> getTotalTasksByStatus() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<TaskTotalStatus> getTotalTasksByStatus(int userId) throws SQLException {
+		String query="SELECT count(*) as total,status FROM tasks JOIN users ON tasks.user_id=users.id where tasks.user_id=? GROUP by status";
+		PreparedStatement ps=getConn().prepareStatement(query);
+		ps.setInt(1, userId);
+		ResultSet rs=ps.executeQuery();
+		List<TaskTotalStatus> list=new ArrayList<TaskTotalStatus>();
+		while(rs.next()) {
+			TaskTotalStatus item=new TaskTotalStatus();
+			item.setTotal(rs.getInt("total"));
+			item.setStatus(rs.getString("status"));
+			list.add(item);
+		}
+
+		return list;
 	}
 	
 	// 		// SELECT count(*),status FROM `tasks` JOIN users ON tasks.user_id=users.id where tasks.user_id=1 GROUP by status 

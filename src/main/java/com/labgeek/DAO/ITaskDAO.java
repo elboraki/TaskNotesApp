@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.labgeek.models.Task;
+import com.labgeek.models.TaskTotalStatus;
 
 public interface ITaskDAO {
 
@@ -26,6 +27,6 @@ public interface ITaskDAO {
 
 	int count(String Search) throws SQLException;
 
-	List<ResultSet> getTotalTasksByStatus() throws SQLException;
+	List<TaskTotalStatus> getTotalTasksByStatus(int userId) throws SQLException;
 
 }
