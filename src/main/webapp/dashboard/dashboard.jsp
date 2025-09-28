@@ -21,7 +21,7 @@ String ctx = request.getContextPath();
 	</c:if>
 </div>
 <div class="mb-4 mt-4">
-	<h2>Dashboard ${taskStatusList.size()}</h2>
+	<h2>Dashboard</h2>
 </div>
 <div class="row">
 	<div class="col-6">

@@ -1,5 +1,6 @@
 package com.labgeek;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -17,6 +18,7 @@ import static org.mockito.Mockito.when;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +31,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.labgeek.models.Task;
+import com.labgeek.models.TaskTotalStatus;
 
 import persistance.TaskDAO;
 
@@ -250,5 +253,40 @@ class TaskDAOTest {
 	    verifyNoMoreInteractions(ps);
 
 	}
+	
+	@Test
+	void test_total_tasks_status__success()throws Exception{
+		List<TaskTotalStatus> mockedList=new ArrayList<TaskTotalStatus>();
+		
+		TaskTotalStatus totalTaskStatus=new TaskTotalStatus();
+		totalTaskStatus.setStatus("In Progress");
+		totalTaskStatus.setTotal(5);
+		mockedList.add(totalTaskStatus);
+		
+		totalTaskStatus.setStatus("Completed");
+		totalTaskStatus.setTotal(10);
+		mockedList.add(totalTaskStatus); 
+		
+		when(ps.executeQuery()).thenReturn(rs);
+
+		when(dao.getTotalTasksByStatus(1)).thenReturn(mockedList);
+
+		List<TaskTotalStatus> exprectedArray=dao.getTotalTasksByStatus(1);
+
+		assertEquals(exprectedArray,mockedList);
+
+		ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
+		verify(connection).prepareStatement(sqlCap.capture());
+		assertTrue(sqlCap.getValue().toUpperCase().contains("SELECT"));
+		InOrder inOrder=inOrder(ps);
+		inOrder.verify(ps).setInt(1, 1);
+
+
+
+		verify(ps).executeQuery();
+	    verifyNoMoreInteractions(ps);
+
+	}
+
 
 }

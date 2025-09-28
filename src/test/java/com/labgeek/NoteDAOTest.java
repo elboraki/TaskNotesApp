@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -14,18 +15,22 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.labgeek.models.Category;
 import com.labgeek.models.Note;
+import com.labgeek.models.TaskTotalStatus;
+import com.labgeek.models.TotalNoteCategory;
 import com.labgeek.models.User;
 
 import persistance.NoteDAO;
@@ -214,6 +219,41 @@ class NoteDAOTest {
 		verify(ps).setInt(1, mockedNote.getId());
 		verify(ps, times(1)).executeUpdate();
 		verifyNoMoreInteractions(ps);
+
+	}
+	
+	
+	@Test
+	void test_total_notes_category__success()throws Exception{
+		List<TotalNoteCategory> mockedList=new ArrayList<TotalNoteCategory>();
+		
+		TotalNoteCategory totalNoteCategory=new TotalNoteCategory();
+		totalNoteCategory.setCategory("In Progress");
+		totalNoteCategory.setTotal(5);
+		mockedList.add(totalNoteCategory);
+		
+		totalNoteCategory.setCategory("Completed");
+		totalNoteCategory.setTotal(10);
+		mockedList.add(totalNoteCategory); 
+		
+		when(ps.executeQuery()).thenReturn(rs);
+
+		when(dao.getTotalNoteByCategory(1)).thenReturn(mockedList);
+
+		List<TotalNoteCategory> expectedArray=dao.getTotalNoteByCategory(1);
+
+		assertEquals(expectedArray,mockedList);
+
+		ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
+		verify(connection).prepareStatement(sqlCap.capture());
+		assertTrue(sqlCap.getValue().toUpperCase().contains("SELECT"));
+		InOrder inOrder=inOrder(ps);
+		inOrder.verify(ps).setInt(1, 1);
+
+
+
+		verify(ps).executeQuery();
+	    verifyNoMoreInteractions(ps);
 
 	}
 
