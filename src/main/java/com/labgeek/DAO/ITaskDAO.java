@@ -9,7 +9,7 @@ import com.labgeek.models.TaskTotalStatus;
 
 public interface ITaskDAO {
 
-	List<Task> findAll(int offset, int limit, String search) throws SQLException;
+	List<Task> findAll(int offset, int limit, String search,int userId) throws SQLException;
 
 	Task getTaskById(int id) throws SQLException;
 
@@ -25,7 +25,7 @@ public interface ITaskDAO {
 
 	int delete(int id) throws SQLException;
 
-	int count(String Search) throws SQLException;
+	int count(String Search,int userId) throws SQLException;
 
 	List<TaskTotalStatus> getTotalTasksByStatus(int userId) throws SQLException;
 

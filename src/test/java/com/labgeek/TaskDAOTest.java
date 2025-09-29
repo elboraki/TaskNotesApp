@@ -74,7 +74,7 @@ class TaskDAOTest {
 		when(rs.getInt("user_id")).thenReturn(10, 11);
 
 		// Act
-		List<Task> out = dao.findAll(10, 5, "Push");
+		List<Task> out = dao.findAll(10, 5, "Push", 1);
 
 		// Assert: results mapped
 		assertNotNull(out);
@@ -90,10 +90,11 @@ class TaskDAOTest {
 		assertTrue(sql.contains("ORDER BY"), "Expected ORDER BY");
 
 		// Parameter order for search branch
-		verify(ps).setString(1, "%Push%");
+		verify(ps).setInt(1, 1);
 		verify(ps).setString(2, "%Push%");
-		verify(ps).setInt(3, 5); // limit
-		verify(ps).setInt(4, 10); // offset
+		verify(ps).setString(3, "%Push%");
+		verify(ps).setInt(4, 5); // limit
+		verify(ps).setInt(5, 10); // offset
 
 		verify(ps, times(1)).executeQuery();
 		verify(rs, times(3)).next(); // T, T, F
@@ -111,7 +112,7 @@ class TaskDAOTest {
 		when(rs.getInt("user_id")).thenReturn(99);
 
 		// Act
-		List<Task> out = dao.findAll(0, 10, "");
+		List<Task> out = dao.findAll(0, 10, "", 1);
 
 		// Assert
 		assertNotNull(out);
@@ -122,12 +123,13 @@ class TaskDAOTest {
 		ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
 		verify(connection).prepareStatement(sqlCap.capture());
 		String sql = sqlCap.getValue().toUpperCase();
-		assertFalse(sql.contains(" WHERE "), "Should NOT contain WHERE when search empty");
+		assertTrue(sql.contains(" WHERE "), "Should  contain WHERE because of user id");
 		assertTrue(sql.contains("ORDER BY"), "Expected ORDER BY");
 
 		// Parameter order for no-search branch
-		verify(ps).setInt(1, 10); // limit
-		verify(ps).setInt(2, 0); // offset
+		verify(ps).setInt(1, 1); // limit
+		verify(ps).setInt(2, 10); // limit
+		verify(ps).setInt(3, 0); // offset
 		verify(ps, times(1)).executeQuery();
 	}
 
@@ -139,14 +141,14 @@ class TaskDAOTest {
 		when(rs.getInt(1)).thenReturn(42);
 
 		// Act
-		int result = dao.count("");
+		int result = dao.count("",1);
 
 		// Assert
 		assertEquals(42, result);
 
 		ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
 		verify(connection).prepareStatement(sqlCap.capture());
-		assertFalse(sqlCap.getValue().toUpperCase().contains("WHERE"));
+		assertTrue(sqlCap.getValue().toUpperCase().contains("WHERE"));
 		verify(ps, never()).setString(anyInt(), anyString());
 	}
 
@@ -158,7 +160,7 @@ class TaskDAOTest {
 		when(rs.getInt(1)).thenReturn(5);
 
 		// Act
-		int result = dao.count("Bug");
+		int result = dao.count("Bug", 1);
 
 		// Assert
 		assertEquals(5, result);
@@ -166,9 +168,9 @@ class TaskDAOTest {
 		ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
 		verify(connection).prepareStatement(sqlCap.capture());
 		assertTrue(sqlCap.getValue().toUpperCase().contains("WHERE"));
-
-		verify(ps).setString(1, "%Bug%");
+		verify(ps).setInt(1, 1);
 		verify(ps).setString(2, "%Bug%");
+		verify(ps).setString(3, "%Bug%");
 	}
 
 	@Test
@@ -187,19 +189,19 @@ class TaskDAOTest {
 		ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
 		verify(connection).prepareStatement(sqlCap.capture());
 		assertTrue(sqlCap.getValue().toUpperCase().contains("INSERT"));
-		InOrder inOrder=inOrder(ps);
+		InOrder inOrder = inOrder(ps);
 		inOrder.verify(ps).setString(1, "ABC");
 		inOrder.verify(ps).setString(2, "lorem ipsum vivaldi");
 		inOrder.verify(ps).setString(3, "Pending");
 		inOrder.verify(ps).setInt(4, 1);
 
-
 		verify(ps).executeUpdate();
-	    verifyNoMoreInteractions(ps);
+		verifyNoMoreInteractions(ps);
 
 	}
+
 	@Test
-	void update_task_and_return_success()throws Exception{
+	void update_task_and_return_success() throws Exception {
 		when(ps.executeUpdate()).thenReturn(1);
 
 		Task mockedTask = new Task();
@@ -208,27 +210,26 @@ class TaskDAOTest {
 		mockedTask.setStatus("Pending");
 		mockedTask.setId(11);
 
-		long row=dao.update(mockedTask);
+		long row = dao.update(mockedTask);
 
-		assertEquals(row,1);
+		assertEquals(row, 1);
 
 		ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
 		verify(connection).prepareStatement(sqlCap.capture());
 		assertTrue(sqlCap.getValue().toUpperCase().contains("UPDATE"));
-		InOrder inOrder=inOrder(ps);
+		InOrder inOrder = inOrder(ps);
 		inOrder.verify(ps).setString(1, "ABC");
 		inOrder.verify(ps).setString(2, "lorem ipsum bethooven");
 		inOrder.verify(ps).setString(3, "Pending");
 		inOrder.verify(ps).setInt(4, 11);
 
-
 		verify(ps).executeUpdate();
-	    verifyNoMoreInteractions(ps);
+		verifyNoMoreInteractions(ps);
 
 	}
 
 	@Test
-	void delete_task_and_return_success()throws Exception{
+	void delete_task_and_return_success() throws Exception {
 		when(ps.executeUpdate()).thenReturn(1);
 
 		Task mockedTask = new Task();
@@ -237,56 +238,51 @@ class TaskDAOTest {
 		mockedTask.setStatus("Pending");
 		mockedTask.setId(1);
 
-		long row=dao.delete(mockedTask.getId());
+		long row = dao.delete(mockedTask.getId());
 
-		assertEquals(row,1);
+		assertEquals(row, 1);
 
 		ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
 		verify(connection).prepareStatement(sqlCap.capture());
 		assertTrue(sqlCap.getValue().toUpperCase().contains("DELETE"));
-		InOrder inOrder=inOrder(ps);
+		InOrder inOrder = inOrder(ps);
 		inOrder.verify(ps).setInt(1, 1);
 
-
-
 		verify(ps).executeUpdate();
-	    verifyNoMoreInteractions(ps);
+		verifyNoMoreInteractions(ps);
 
 	}
-	
+
 	@Test
-	void test_total_tasks_status__success()throws Exception{
-		List<TaskTotalStatus> mockedList=new ArrayList<TaskTotalStatus>();
-		
-		TaskTotalStatus totalTaskStatus=new TaskTotalStatus();
+	void test_total_tasks_status__success() throws Exception {
+		List<TaskTotalStatus> mockedList = new ArrayList<TaskTotalStatus>();
+
+		TaskTotalStatus totalTaskStatus = new TaskTotalStatus();
 		totalTaskStatus.setStatus("In Progress");
 		totalTaskStatus.setTotal(5);
 		mockedList.add(totalTaskStatus);
-		
+
 		totalTaskStatus.setStatus("Completed");
 		totalTaskStatus.setTotal(10);
-		mockedList.add(totalTaskStatus); 
-		
+		mockedList.add(totalTaskStatus);
+
 		when(ps.executeQuery()).thenReturn(rs);
 
 		when(dao.getTotalTasksByStatus(1)).thenReturn(mockedList);
 
-		List<TaskTotalStatus> exprectedArray=dao.getTotalTasksByStatus(1);
+		List<TaskTotalStatus> exprectedArray = dao.getTotalTasksByStatus(1);
 
-		assertEquals(exprectedArray,mockedList);
+		assertEquals(exprectedArray, mockedList);
 
 		ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
 		verify(connection).prepareStatement(sqlCap.capture());
 		assertTrue(sqlCap.getValue().toUpperCase().contains("SELECT"));
-		InOrder inOrder=inOrder(ps);
+		InOrder inOrder = inOrder(ps);
 		inOrder.verify(ps).setInt(1, 1);
 
-
-
 		verify(ps).executeQuery();
-	    verifyNoMoreInteractions(ps);
+		verifyNoMoreInteractions(ps);
 
 	}
-
 
 }

@@ -30,9 +30,9 @@ public class TaskDAO implements ITaskDAO {
 	}
 
 	@Override
-	public List<Task> findAll(int offset, int limit, String search) throws SQLException {
-		String sql = "SELECT id,title,description,status,user_id from tasks";
-		String whereSql = "WHERE title like ? OR description like ?";
+	public List<Task> findAll(int offset, int limit, String search,int userId) throws SQLException {
+		String sql = "SELECT id,title,description,status,user_id from tasks WHERE user_id=?";
+		String whereSql = "AND (title like ? OR description like ?)";
 		String orderSql = "ORDER BY id DESC limit ? offset ?";
 		int idx = 1;
 		List<Task> taskList = new ArrayList<>();
@@ -47,13 +47,15 @@ public class TaskDAO implements ITaskDAO {
 		try {
 			PreparedStatement ps = getConn().prepareStatement(sql);
 			if (search != null && !search.isEmpty()) {
-				ps.setString(1, "%" + search + "%");
+				ps.setInt(1, userId);
 				ps.setString(2, "%" + search + "%");
-				ps.setInt(3, limit);
-				ps.setInt(4, offset);
+				ps.setString(3, "%" + search + "%");
+				ps.setInt(4, limit);
+				ps.setInt(5, offset);
 			} else {
-				ps.setInt(1, limit);
-				ps.setInt(2, offset);
+				ps.setInt(1, userId);
+				ps.setInt(2, limit);
+				ps.setInt(3, offset);
 			}
 
 			ResultSet rs = ps.executeQuery();
@@ -138,16 +140,18 @@ public class TaskDAO implements ITaskDAO {
 	}
 
 	@Override
-	public int count(String search) throws SQLException {
-		String sql = "SELECT count(*) from tasks";
+	public int count(String search,int userId) throws SQLException {
+		String sql = "SELECT count(*) from tasks WHERE user_id=?";
 		if (search != null && !search.isEmpty()) {
-			sql += " WHERE title LIKE ? OR description LIKE ?";
+			sql += " AND (title LIKE ? OR description LIKE ?)";
 		}
 		try {
 			PreparedStatement ps = getConn().prepareStatement(sql);
+			ps.setInt(1,userId);
 			if (search != null && !search.isEmpty()) {
-				ps.setString(1, "%" + search + "%");
+				
 				ps.setString(2, "%" + search + "%");
+				ps.setString(3, "%" + search + "%");
 			}
 			ResultSet rs = ps.executeQuery();
 			rs.next();

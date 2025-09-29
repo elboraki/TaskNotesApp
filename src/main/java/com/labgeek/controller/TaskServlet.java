@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.labgeek.models.Task;
+import com.labgeek.models.User;
 
 import persistance.TaskDAO;
 
@@ -74,6 +75,8 @@ public class TaskServlet extends HttpServlet {
 
 		} else {
 			// TODO Auto-generated method stub
+			HttpSession session=request.getSession();
+			User user=(User) session.getAttribute("currentUser");
 			int page = 1;
 			int recordsPerPage = 10;
 			String search = request.getParameter("search"); // new
@@ -81,9 +84,9 @@ public class TaskServlet extends HttpServlet {
 				page = Integer.parseInt(request.getParameter("page"));
 			}
 			try {
-				List<Task> tasks = taskDAO.findAll((page - 1) * recordsPerPage, recordsPerPage, search);
+				List<Task> tasks = taskDAO.findAll((page - 1) * recordsPerPage, recordsPerPage, search,user.getId());
 				request.setAttribute("tasks", tasks);
-				int noOfRecords = taskDAO.count(search);
+				int noOfRecords = taskDAO.count(search,user.getId());
 				int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 				request.setAttribute("noOfPages", noOfPages);
 				request.setAttribute("currentPage", page);

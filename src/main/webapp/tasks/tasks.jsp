@@ -51,7 +51,6 @@ String ctx = request.getContextPath();
 					<th>Title</th>
 					<th>Description</th>
 					<th>Status</th>
-					<th>User</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -62,7 +61,6 @@ String ctx = request.getContextPath();
 						<td><c:out value="${t.title}" /></td>
 						<td><c:out value="${t.description}" /></td>
 						<td>${t.status}</td>
-						<td>${t.userId}</td>
 						<td class="actions"><a class="btn btn-warning"
 							href="<%= ctx %>/tasks?action=edit&id=${t.id}"> <i
 								class="bi bi-pencil-square"></i>
